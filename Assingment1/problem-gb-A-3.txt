@@ -1,0 +1,49 @@
+---------
+A-3 Loops
+---------
+
+        Compile the following program (file A-3.c) and observe the dumps.
+
+	Source file : A-3.c
+	Compilation : gcc-4.7.2 -c -fdump-tree-cfg A-3.c
+	View result : vi -O A-3.c A-3.c.*.cfg
+	Clear dumps : rm -f A-3.c.* A-3.o
+
+Program
+-------
+
+        int main()
+        {
+    	    int sum = 0;
+    	    int i, j;
+    
+    	    while(sum < 100) {
+    		    sum = sum * 2;
+    	    }
+    
+    	    for(i=0; i<25; i++) {
+    		    for(j=0; j<50; j++) {
+    			    sum = sum + i*j;
+    		    }
+    	    }
+        }
+
+Questions
+---------
+
+        1   Identify the basic blocks that correspond  to the while loop. How is
+            the GIMPLE for a while loop different from simple if-else jumps?
+
+Ans : Basic blocks corespond to while loop--> <bb2>,<bb3>,<bb4>
+	Basic blocks for while loop are assigned first to the if gotos statement while
+	 in case of if else statement they are assigned after if gotos statement.
+        
+	   2   Identify the  basic blocks  for the nested  for-loop. You  should be
+            able  to identify  intializers, conditions  and increments  for each
+            loop as  well as  the shared  inner body.  Is there  really anything
+            special about a for-loop as compared to a while-loop?
+
+Ans : Basic Blocks of for loop--> <bb5>,<bb6>,<bb7>,<bb8>,<bb9>,<bb10> 
+	First basic block is for initialization then after it is for checking condition
+	using if gotos and then if condition is true then basic block is for increment.
+	Nothing is special about it only basic block for increment and iniatialisation added.

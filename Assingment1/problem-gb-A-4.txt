@@ -1,0 +1,48 @@
+-----------------------
+A-4 Arrays and Pointers
+-----------------------
+
+        In this program we observe how GCC treats arrays and pointers.
+
+        Compile  the following  program (file  A-4.c) and  observe the  compiler
+        output to answer the questions.
+
+        Source file : A-4.c
+        Compilation : gcc-4.7.2 -c -fdump-tree-cfg A-4.c
+        View result : vi -O A-4.c A-4.c.*.cfg
+        Clear dumps : rm -f A-4.c.* A-4.o
+
+Program
+-------
+
+        int main()
+        {
+            int a[3];
+            int b[] = {1, 2, 3};
+            int i, *p;
+            for (i=0; i<3; i++) {
+                a[i] = b[i];
+            }
+            p = a;
+            *(p + 2) = 5;
+        }
+
+
+Questions
+---------
+
+        1   How is array declaration and initialization handled?
+	Ans : Just like variable,in case of arrays first all declarations are done and 
+	then its initialization if any.In the case of arrays,the initialization is split into
+	multiple statement that assign values to individual array elements.
+
+        2   Why does the statement a[i] = b[i] get broken down to two steps with
+            an intermediate temporary?
+	Ans :It is broken down because GIMPLE can perfom only one operation per statement.
+	    So it is split into read and write statement using temporary
+
+        3   Why are there CLOBBER statements at the end?
+	Ans : CLOBBER statements are used for address-escaped variables. It is an annotation 
+	      to signify that the scope of this address-escaped variable has ended.
+
+

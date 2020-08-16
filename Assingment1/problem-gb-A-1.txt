@@ -1,0 +1,88 @@
+----------------------------------------------
+A-1 Declarations, Expressions, and Assignments
+----------------------------------------------
+
+        Compile the following program (file  A-1.c) and observe the GIMPLE dumps
+        and answer  the questions below. If  you manage to finish  all questions
+        quickly try to attempt the optional problem.
+
+        Source file : A-1.c
+        Compilation : gcc-4.7.2 -c -fdump-tree-gimple A-1.c
+        View result : vi -O A-1.c A-1.c.*.gimple
+        Clear dumps : rm -f A-1.c.* A-1.o
+
+Program
+-------
+
+	int Z;
+
+	void main()
+	{
+		int a, b, c;
+		int p = 6;
+		int q;
+		double r;
+
+		a = 10;
+		b = 20;
+		c = a * b + 25;
+		p = 6;
+		q = Z;
+		r = 34.5;
+		Z = r;
+		Z = Z + 1;
+	}
+
+
+Questions
+---------
+
+        1   How  do the  declarations  look in  the  GIMPLE? Specifically,  what
+            happens to multiple  variables declared and initialized  on the same
+            line? What happens to global declaration [int Z]?
+Ans : A)When multiple variables delcared on same line then each declaration is done as an independent 
+	local variable declaration.First all declarations are done, then initialization of
+	that variable takes place if any. 
+	
+	B)Declaration of global variable is not shown in GIMPEL as they are directly used in body. 
+
+        2   How are complex  expressions such as [c  = a * b +  25] broken down?
+            Can you  determine a  rule as  to when  temporary variables  will be
+            introduced?
+Ans : A)Operations in GIMPLE can have at most one operation.So complex operations are broken into 
+	simple by introducing temporary variables.Ex.
+				temp = a * b 
+				c = temp + 25
+		,where temp is the temporary variable created.
+ 	B)When our expession is complex that cannot be solved easily.We can convert C expression to 
+	abstact syntax tree and non leaf node correspond to either a local or temporary variable storage.
+       
+	 3   How are  floats/doubles represented in  GIMPLE? What happens  when a
+            float/double is assigned to an integer in [Z = r]?
+	
+Ans :	A)Floats are represented using exponential e(scientific notation).
+	like 35613.14564 stored as 3.561314564e+4
+	B)Float is first converted to integer using int and it is then 	assigned to temp variable
+	 in case of global Z.
+	
+        4   How  are reads/writes  to the  global variable  Z performed?  Why is
+            there a temporary introduced  for the statement [Z = Z  + 1] but not
+            for the statements [q = Z] or [Z = p]?
+Ans :   Reading/writing of global variables requires a memory load or store operations.
+	In GIMPLE we can have atmost one operation ,the only type of  statements involving globals are 
+	of the form "GLOBAL = LOCAL" or  "LOCAL = GLOBAL".
+	This is because while local variables of a procedure can reside entirely in registers,every 
+	read/write  to global variables must refer to main  memory as they can be accessed by  other entities.
+          Hence,any operation on global variables (such as the increment shown  in this example) has to 
+	go through an indirection of a temporary version of the global inside registers (as this temporary 
+	value is not visible to I/O devices, etc).Global temporaries are named similar to the global 
+	variable but with a numeric suffix.
+----------------
+
+        Try to understand the underlying GIMPLE representation by looking at the
+        RAW dumps:
+
+        Compilation : gcc-4.7.2 -c -fdump-tree-gimple-raw A-1.c
+        View result : vi -O A-1.c A-1.c.*.gimple
+
+
