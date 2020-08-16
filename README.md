@@ -1,2 +1,2 @@
 # PPL_Assignments
-This conatains Assignments of Subject PPL
+This contains Assignments of Subject PPL
