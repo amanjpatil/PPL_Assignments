@@ -1,0 +1,29 @@
+main ()
+{
+  int D.2029;
+
+  {
+    int a;
+    int b;
+
+    a = 4;
+    goto <D.2023>;
+    <D.2022>:
+    if (a <= 3) goto <D.2026>; else goto <D.2027>;
+    <D.2026>:
+    b = b + 2;
+    goto <D.2028>;
+    <D.2027>:
+    b = b * 2;
+    <D.2028>:
+    a = a + 1;
+    <D.2023>:
+    if (a <= 99) goto <D.2022>; else goto <D.2024>;
+    <D.2024>:
+    printf ("%d%d", a, b);
+  }
+  D.2029 = 0;
+  return D.2029;
+}
+
+
